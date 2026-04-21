@@ -1,0 +1,49 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+dynamic = ["version"]
+name = "dbt-sail"
+description = "The Sail adapter plugin for dbt"
+readme = "README.md"
+keywords = [
+    "dbt",
+    "adapter",
+    "adapters",
+    "database",
+    "elt",
+    "dbt-core",
+    "sail",
+    "spark",
+]
+requires-python = ">=3.10.0"
+authors = [{ name = "LakeSail", email = "kyle@lakesail.com" }]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = ["dbt-spark[session]>=1.8.0", "pysail"]
+
+[project.optional-dependencies]
+dev = ["dbt-tests-adapter", "pytest", "pytest-xdist"]
+
+# Need to update these when published
+[project.urls]
+Homepage = "https://github.com/lakehq/sail"
+Repository = "https://github.com/lakehq/sail.git"
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unit", "tests/functional"]
+addopts = "-v --color=yes"
+filterwarnings = [
+    "ignore:.*'soft_unicode' has been renamed to 'soft_str'*:DeprecationWarning",
+    "ignore:unclosed file .*:ResourceWarning",
+]

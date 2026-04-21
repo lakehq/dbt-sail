@@ -1,0 +1,28 @@
+[version]
+path = "src/dbt/adapters/sail/__version__.py"
+pattern = "version = \"(?P<version>[^\"]+)\""
+
+[build.targets.wheel]
+packages = ["src/dbt"]
+
+[envs.default]
+pre-install-commands = [
+    "pip install -e ../dbt-adapters",
+    "pip install -e ../dbt-tests-adapter",
+    "pip install -e ../dbt-spark",
+]
+dependencies = [
+    "dbt-common @ git+https://github.com/dbt-labs/dbt-common.git",
+    "dbt-core @ git+https://github.com/dbt-labs/dbt-core.git#subdirectory=core",
+    "pre-commit==3.7.0",
+    "pytest>=7.0,<8.0",
+    "pytest-xdist",
+]
+
+[envs.default.scripts]
+setup = [
+    "pre-commit install",
+]
+code-quality = "pre-commit run --all-files"
+unit-tests = "python -m pytest {args:tests/unit}"
+integration-tests = "python -m pytest {args:tests/functional}"
