@@ -43,6 +43,9 @@ class TestGenericTestsSpark(BaseGenericTests):
     pass
 
 
+# Skipped to match dbt-spark upstream, which excludes these tests for the
+# apache_spark and spark_session profiles (requires delta file_format).
+@pytest.mark.skip(reason="snapshot tests require delta file_format; skipped upstream for session profile")
 class TestSnapshotCheckColsSpark(BaseSnapshotCheckCols):
     @pytest.fixture(scope="class")
     def project_config_update(self):
@@ -56,6 +59,7 @@ class TestSnapshotCheckColsSpark(BaseSnapshotCheckCols):
         }
 
 
+@pytest.mark.skip(reason="snapshot tests require delta file_format; skipped upstream for session profile")
 class TestSnapshotTimestampSpark(BaseSnapshotTimestamp):
     @pytest.fixture(scope="class")
     def project_config_update(self):
