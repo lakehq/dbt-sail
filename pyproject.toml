@@ -35,10 +35,11 @@ dependencies = ["dbt-spark[session]>=1.8,<2.0", "pysail"]
 [project.optional-dependencies]
 dev = ["dbt-tests-adapter", "pytest", "pytest-xdist"]
 
-# Need to update these when published
 [project.urls]
-Homepage = "https://github.com/lakehq/sail"
-Repository = "https://github.com/lakehq/sail.git"
+Homepage = "https://github.com/lakehq/dbt-sail"
+Repository = "https://github.com/lakehq/dbt-sail.git"
+Issues = "https://github.com/lakehq/dbt-sail/issues"
+Changelog = "https://github.com/lakehq/dbt-sail/blob/main/CHANGELOG.md"
 
 [tool.pytest.ini_options]
 testpaths = ["tests/unit", "tests/functional"]
