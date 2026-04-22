@@ -18,7 +18,7 @@ keywords = [
     "spark",
 ]
 requires-python = ">=3.10.0"
-authors = [{ name = "LakeSail", email = "kyle@lakesail.com" }]
+authors = [{ name = "LakeSail", email = "hello@lakesail.com" }]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: Apache Software License",
@@ -30,7 +30,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-dependencies = ["dbt-spark[session]>=1.8.0", "pysail"]
+dependencies = ["dbt-spark[session]>=1.8,<2.0", "pysail"]
 
 [project.optional-dependencies]
 dev = ["dbt-tests-adapter", "pytest", "pytest-xdist"]
