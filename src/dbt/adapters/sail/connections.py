@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Any, Dict
+from typing import Any, Dict, Tuple
 
 from dbt.adapters.contracts.connection import Connection, ConnectionState
 from dbt.adapters.events.logging import AdapterLogger
@@ -28,6 +28,9 @@ class SailCredentials(SparkCredentials):
     @property
     def unique_field(self) -> str:
         return self.host or "embedded"
+
+    def _connection_keys(self) -> Tuple[str, ...]:
+        return "mode", "host", "port", "schema"
 
     def __post_init__(self) -> None:
         # For embedded mode, host is not required — set defaults

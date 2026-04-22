@@ -1,0 +1,19 @@
+fixed:
+  type: sail
+prompts:
+  _choose_connection_mode:
+    embedded:
+      _fixed_mode: embedded
+    remote:
+      _fixed_mode: remote
+      host:
+        hint: "hostname of running Sail server"
+      port:
+        default: 50051
+        type: "int"
+  schema:
+    hint: "default schema that dbt will build objects in"
+  threads:
+    hint: "1 or more"
+    type: "int"
+    default: 1
