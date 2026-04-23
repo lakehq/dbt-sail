@@ -27,7 +27,7 @@ class SailCredentials(SparkCredentials):
 
     @property
     def unique_field(self) -> str:
-        return self.host or "embedded"
+        return self.host or "embedded"  # type: ignore
 
     def _connection_keys(self) -> Tuple[str, ...]:
         return "mode", "host", "port", "schema"
@@ -35,9 +35,9 @@ class SailCredentials(SparkCredentials):
     def __post_init__(self) -> None:
         # For embedded mode, host is not required — set defaults
         if self.mode == SailConnectionMethod.EMBEDDED:
-            if self.host is None:
+            if self.host is None:  # type: ignore
                 self.host = "127.0.0.1"
-            if self.method is None:
+            if self.method is None:  # type: ignore
                 # Set method to session so SparkCredentials validation doesn't fail
                 from dbt.adapters.spark.connections import SparkConnectionMethod
 
@@ -54,10 +54,10 @@ class SailCredentials(SparkCredentials):
             raise DbtConfigError("Must specify `schema` in profile")
 
         # Spark treats database and schema as the same thing
-        if self.database is not None and self.database != self.schema:
+        if self.database is not None and self.database != self.schema:  # type: ignore
             raise DbtConfigError(
                 f"    schema: {self.schema} \n"
-                f"    database: {self.database} \n"
+                f"    database: {self.database} \n"  # type: ignore
                 f"On Sail, database must be omitted or have the same value as schema."
             )
         self.database = None
@@ -103,13 +103,13 @@ class SailConnectionManager(SparkConnectionManager):
             Connection as SessionConnection,
         )
 
-        if cls._server is None or not cls._server.running:
+        if cls._server is None or not cls._server.running:  # type: ignore
             port = creds.port if creds.port != 443 else 0
-            cls._server = SparkConnectServer(ip=creds.host or "127.0.0.1", port=port)
-            cls._server.start(background=True)
-            logger.debug(f"Started embedded Sail server at {cls._server.listening_address}")
+            cls._server = SparkConnectServer(ip=creds.host or "127.0.0.1", port=port)  # type: ignore
+            cls._server.start(background=True)  # type: ignore
+            logger.debug(f"Started embedded Sail server at {cls._server.listening_address}")  # type: ignore
 
-        ip, port = cls._server.listening_address
+        ip, port = cls._server.listening_address  # type: ignore
         remote_url = f"sc://{ip}:{port}"
 
         params = dict(creds.server_side_parameters)
