@@ -1,0 +1,87 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish the package to Test PyPI
+        type: boolean
+        required: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Hatch
+        uses: pypa/hatch@install
+
+      - name: Verify tag
+        if: ${{ github.event_name == 'push' }}
+        env:
+          RELEASE_TAG: ${{ github.ref }}
+        shell: bash
+        run: |
+          version="$(hatch version)"
+          if [[ "${RELEASE_TAG}" == "refs/tags/v${version}" ]]; then
+            echo "The package version ${version} will be published to PyPI."
+          else
+            echo "The package version ${version} and the Git tag ${RELEASE_TAG} do not match."
+            exit 1
+          fi
+
+      - name: Build artifacts
+        run: hatch build
+
+      - name: Validate artifacts
+        run: pipx run twine check dist/*
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/*
+          retention-days: 7
+
+  publish-pypi:
+    name: Publish to PyPI
+    if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true') }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') && 'release' || 'release/test' }}
+    permissions:
+      id-token: write
+    needs:
+      - build
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') && 'https://upload.pypi.org/legacy/' || 'https://test.pypi.org/legacy/' }}
+          packages-dir: dist
+          skip-existing: true
+
+  publish-github:
+    name: Publish GitHub Release
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs:
+      - publish-pypi
+    steps:
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
