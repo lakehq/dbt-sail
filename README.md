@@ -12,10 +12,6 @@ The [Sail](https://github.com/lakehq/sail) adapter plugin for [dbt](https://www.
 
 > TODO: publish to PyPI and document `pip install dbt-sail`.
 
-## Documentation
-
-> TODO: link the setup and configuration pages on [docs.getdbt.com](https://docs.getdbt.com) once they're live.
-
 ## Community
 
 - Report `dbt-sail` adapter issues on the [dbt-sail issue tracker](https://github.com/lakehq/dbt-sail/issues).

@@ -17,7 +17,7 @@ keywords = [
     "sail",
     "spark",
 ]
-requires-python = ">=3.10.0"
+requires-python = ">=3.10,<3.15"
 authors = [{ name = "LakeSail", email = "hello@lakesail.com" }]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -29,6 +29,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 dependencies = ["dbt-spark[session]>=1.8,<2.0", "pysail"]
 
