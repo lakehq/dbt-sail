@@ -32,7 +32,7 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
 ]
-dependencies = ["dbt-spark[session]>=1.8,<2.0", "pysail", "pyspark[connect]"]
+dependencies = ["dbt-spark>=1.8,<2.0", "pysail"]
 
 [project.optional-dependencies]
 dev = ["dbt-tests-adapter", "pytest", "pytest-xdist"]
