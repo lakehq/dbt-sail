@@ -72,6 +72,50 @@ def test_credentials_unique_field_remote() -> None:
     credentials = SailCredentials(
         mode=SailConnectionMethod.REMOTE,  # type: ignore
         host="myorg.sailhost.com",
+        port=50051,
         schema="analytics",
     )
     assert credentials.unique_field == "myorg.sailhost.com"
+
+
+def _remote_url(**kwargs) -> str:
+    from dbt.adapters.sail.connections import SailConnectionManager
+
+    credentials = SailCredentials(
+        mode=SailConnectionMethod.REMOTE,  # type: ignore
+        host="myorg.sailhost.com",
+        schema="analytics",
+        **kwargs,
+    )
+    return SailConnectionManager._remote_url(credentials)
+
+
+def test_remote_credentials_port_443_requires_tls() -> None:
+    with pytest.raises(DbtConfigError, match="Port 443"):
+        SailCredentials(
+            mode=SailConnectionMethod.REMOTE,  # type: ignore
+            host="myorg.sailhost.com",
+            schema="analytics",
+        )
+
+
+def test_remote_url_explicit_port() -> None:
+    assert _remote_url(port=15002) == "sc://myorg.sailhost.com:15002/"
+
+
+def test_remote_url_with_token_keeps_port_443() -> None:
+    assert _remote_url(token="abc") == "sc://myorg.sailhost.com:443/;token=abc"
+
+
+def test_remote_url_with_use_ssl_keeps_port_443() -> None:
+    assert _remote_url(use_ssl=True) == "sc://myorg.sailhost.com:443/;use_ssl=true"
+
+
+def test_remote_credentials_hide_token() -> None:
+    credentials = SailCredentials(
+        mode=SailConnectionMethod.REMOTE,  # type: ignore
+        host="myorg.sailhost.com",
+        schema="analytics",
+        token="abc",
+    )
+    assert "token" not in credentials._connection_keys()

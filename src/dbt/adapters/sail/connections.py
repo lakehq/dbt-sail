@@ -49,6 +49,14 @@ class SailCredentials(SparkCredentials):
                 from dbt.adapters.spark.connections import SparkConnectionMethod
 
                 self.method = SparkConnectionMethod.SESSION
+            # dbt-spark defaults `port` to 443. Port 443 without TLS is most likely
+            # a missing port or missing credentials, so fail instead of guessing.
+            if self.port == 443 and not self.use_ssl and self.token is None:
+                raise DbtConfigError(
+                    "Port 443 in remote mode needs `token` or `use_ssl: true`. "
+                    "For a Sail server without TLS, set `port` "
+                    "(Sail's default is 50051)."
+                )
 
         if self.schema is None:
             raise DbtConfigError("Must specify `schema` in profile")
@@ -124,9 +132,17 @@ class SailConnectionManager(SparkConnectionManager):
             Connection as SessionConnection,
         )
 
-        port = creds.port if creds.port != 443 else 50051
-        remote_url = f"sc://{creds.host}:{port}"
-
         params = dict(creds.server_side_parameters)
-        params["spark.remote"] = remote_url
+        params["spark.remote"] = cls._remote_url(creds)
         return SessionConnectionWrapper(SessionConnection(server_side_parameters=params))
+
+    @staticmethod
+    def _remote_url(creds: SailCredentials) -> str:
+        """Build the Spark Connect URL for remote mode."""
+        url = f"sc://{creds.host}:{creds.port}/"
+        if creds.use_ssl:
+            url += ";use_ssl=true"
+        # PySpark turns on TLS by itself when a token is set.
+        if creds.token is not None:
+            url += f";token={creds.token}"
+        return url

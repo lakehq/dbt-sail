@@ -10,9 +10,19 @@ The [Sail](https://github.com/lakehq/sail) adapter plugin for [dbt](https://www.
 
 ## Installation
 
+`dbt-sail` does not install PySpark, so you can choose the PySpark version. Install it alongside a Spark Connect client:
+
 ```bash
-pip install dbt-sail
+pip install dbt-sail "pyspark-client==4.2.0"
 ```
+
+For Spark 3.5, use `pyspark[connect]` instead:
+
+```bash
+pip install dbt-sail "pyspark[connect]==3.5.9"
+```
+
+`pyspark-client` is the lightweight client introduced in Spark 4.0. It leaves out the Spark JARs, which Sail does not need.
 
 ## Community
 
