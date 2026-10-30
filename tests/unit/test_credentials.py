@@ -72,6 +72,7 @@ def test_credentials_unique_field_remote() -> None:
     credentials = SailCredentials(
         mode=SailConnectionMethod.REMOTE,  # type: ignore
         host="myorg.sailhost.com",
+        port=50051,
         schema="analytics",
     )
     assert credentials.unique_field == "myorg.sailhost.com"
@@ -89,8 +90,13 @@ def _remote_url(**kwargs) -> str:
     return SailConnectionManager._remote_url(credentials)
 
 
-def test_remote_url_default_port_uses_sail_port() -> None:
-    assert _remote_url() == "sc://myorg.sailhost.com:50051/"
+def test_remote_credentials_port_443_requires_tls() -> None:
+    with pytest.raises(DbtConfigError, match="Port 443"):
+        SailCredentials(
+            mode=SailConnectionMethod.REMOTE,  # type: ignore
+            host="myorg.sailhost.com",
+            schema="analytics",
+        )
 
 
 def test_remote_url_explicit_port() -> None:
