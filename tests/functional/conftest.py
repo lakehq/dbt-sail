@@ -1,6 +1,37 @@
 import pytest
 
 
+from tests.suite_policy import format_defaults, relative_test_path, suite_policy
+
+
+@pytest.fixture(scope="class")
+def file_format(request):
+    _, default = suite_policy(relative_test_path(request.node.path))
+    return request.config.getoption("--file-format") or default
+
+
+@pytest.fixture(scope="session")
+def profile_name():
+    return "sail"
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_fixture_setup(fixturedef, request):
+    outcome = yield
+    if fixturedef.argname != "project_config_update" or outcome.excinfo is not None:
+        return
+    _, default = suite_policy(relative_test_path(request.node.path))
+    if default is None:
+        return
+    result = format_defaults(
+        outcome.get_result(), request.config.getoption("--file-format") or default
+    )
+    # FixtureDef has already cached the original object inside the wrapped hook.
+    _, cache_key, error = fixturedef.cached_result
+    fixturedef.cached_result = (result, cache_key, error)
+    outcome.force_result(result)
+
+
 @pytest.fixture(scope="session")
 def sail_server_address(request):
     if request.config.getoption("--sail-connection-mode") == "embedded":

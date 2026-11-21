@@ -1,0 +1,194 @@
+import pytest
+
+from dbt.tests.adapter.persist_docs.test_persist_docs import (
+    BasePersistDocsAllColumnsMissing,
+    BasePersistDocsQuotedColumnCaseSensitive,
+    BasePersistDocsQuotedDescriptionNotAppliedOnMismatch,
+)
+from dbt.tests.util import run_dbt, run_dbt_and_capture
+
+# Modified: source-scoped fixture imports for Sail's shared test harness.
+# [CREDIT]: https://github.com/dbt-labs/dbt-adapters/blob/f353ce0c30820b7aa363b6a7b39d5ef3b4e910d9/dbt-spark/tests/functional/adapter/persist_docs/test_persist_docs.py
+from tests.functional.spark.persist_docs.fixtures import (
+    _MODELS__MY_FUN_DOCS,
+    _MODELS__INCREMENTAL_DELTA,
+    _MODELS__TABLE_DELTA_MODEL,
+    _MODELS__TABLE_DELTA_MODEL_MISSING_COLUMN,
+    _PROPERTIES__MODELS,
+    _PROPERTIES__MISSING_COLUMN,
+    _PROPERTIES__SEEDS,
+    _SEEDS__BASIC,
+    _MODELS__VIEW_DELTA_MODEL,
+    _VIEW_PROPERTIES_MODELS,
+)
+
+
+def _describe_extended(project, relation):
+    return project.run_sql(
+        "describe extended {schema}.{table}".format(schema=project.test_schema, table=relation),
+        fetch="all",
+    )
+
+
+@pytest.mark.skip_profile("apache_spark", "spark_session")
+class TestPersistDocsDeltaTable:
+    @pytest.fixture(scope="class")
+    def models(self):
+        return {
+            "incremental_delta_model.sql": _MODELS__INCREMENTAL_DELTA,
+            "my_fun_docs.md": _MODELS__MY_FUN_DOCS,
+            "table_delta_model.sql": _MODELS__TABLE_DELTA_MODEL,
+            "schema.yml": _PROPERTIES__MODELS,
+        }
+
+    @pytest.fixture(scope="class")
+    def seeds(self):
+        return {"seed.csv": _SEEDS__BASIC, "seed.yml": _PROPERTIES__SEEDS}
+
+    @pytest.fixture(scope="class")
+    def project_config_update(self):
+        return {
+            "models": {
+                "test": {
+                    "+persist_docs": {
+                        "relation": True,
+                        "columns": True,
+                    },
+                }
+            },
+            "seeds": {
+                "test": {
+                    "+persist_docs": {
+                        "relation": True,
+                        "columns": True,
+                    },
+                    "+file_format": "delta",
+                    "+quote_columns": True,
+                }
+            },
+        }
+
+    def test_delta_comments(self, project):
+        run_dbt(["seed"])
+        run_dbt(["run"])
+
+        for table, whatis in [
+            ("table_delta_model", "Table"),
+            ("seed", "Seed"),
+            ("incremental_delta_model", "Incremental"),
+        ]:
+            results = _describe_extended(project, table)
+
+            for result in results:
+                if result[0] == "Comment":
+                    assert result[1].startswith(f"{whatis} model description")
+                if result[0] == "id":
+                    assert result[2].startswith("id Column description")
+                if result[0] == "name":
+                    assert result[2].startswith("Some stuff here and then a call to")
+
+
+@pytest.mark.skip_profile("apache_spark", "spark_session")
+class TestPersistDocsDeltaView:
+    @pytest.fixture(scope="class")
+    def models(self):
+        return {
+            "table_delta_model.sql": _MODELS__TABLE_DELTA_MODEL,
+            "view_delta_model.sql": _MODELS__VIEW_DELTA_MODEL,
+            "schema.yml": _VIEW_PROPERTIES_MODELS,
+        }
+
+    @pytest.fixture(scope="class")
+    def project_config_update(self):
+        return {
+            "models": {
+                "test": {
+                    "+persist_docs": {
+                        "relation": True,
+                        "columns": True,
+                    },
+                }
+            },
+        }
+
+    def test_delta_comments(self, project):
+        run_dbt(["run"])
+
+        results = _describe_extended(project, "view_delta_model")
+
+        for result in results:
+            if result[0] == "Comment":
+                assert result[1].startswith("View model description")
+            if result[0] == "id":
+                assert result[2].startswith("id Column description")
+            if result[0] == "count":
+                assert result[2] is None
+
+
+@pytest.mark.skip_profile("apache_spark", "spark_session")
+class TestPersistDocsMissingColumn:
+    @pytest.fixture(scope="class")
+    def project_config_update(self):
+        return {
+            "models": {
+                "test": {
+                    "+persist_docs": {
+                        "columns": True,
+                    },
+                }
+            }
+        }
+
+    @pytest.fixture(scope="class")
+    def seeds(self):
+        return {"seed.csv": _SEEDS__BASIC, "seed.yml": _PROPERTIES__SEEDS}
+
+    @pytest.fixture(scope="class")
+    def models(self):
+        return {
+            "table_delta_model.sql": _MODELS__TABLE_DELTA_MODEL_MISSING_COLUMN,
+            "my_fun_docs.md": _MODELS__MY_FUN_DOCS,
+        }
+
+    @pytest.fixture(scope="class")
+    def properties(self):
+        return {"schema.yml": _PROPERTIES__MISSING_COLUMN}
+
+    def test_missing_column(self, project):
+        """
+        With column filtering in alter_column_comment, non-existent columns
+        are now skipped instead of causing DB errors, and a warning is emitted.
+        """
+        run_dbt(["seed"])
+        _, logs = run_dbt_and_capture(["run"])
+        assert (
+            "The following columns are specified in the schema but are not present in the database: column_that_does_not_exist"
+            in logs
+        )
+
+
+@pytest.mark.skip_profile("apache_spark", "spark_session")
+class TestPersistDocsAllColumnsMissing(BasePersistDocsAllColumnsMissing):
+    pass
+
+
+@pytest.mark.skip_profile("apache_spark", "spark_session")
+class TestPersistDocsQuotedColumnCaseSensitive(BasePersistDocsQuotedColumnCaseSensitive):
+    pass
+
+
+@pytest.mark.skip_profile("apache_spark", "spark_session")
+class TestPersistDocsQuotedDescriptionNotAppliedOnMismatch(
+    BasePersistDocsQuotedDescriptionNotAppliedOnMismatch
+):
+    @pytest.mark.skip(
+        reason=(
+            "Spark SQL is case-insensitive by default (spark.sql.caseSensitive=false) "
+            "and the Hive metastore stores column names in lowercase, so a "
+            "case-mismatched physical column is physically unreachable. "
+            "Case-sensitivity logic is covered by TestPersistDocsQuotedColumnCaseSensitive. "
+            "Docs: https://spark.apache.org/docs/latest/sql-ref-identifier.html"
+        )
+    )
+    def test_quoted_description_not_applied_on_case_mismatch(self, project):
+        pass

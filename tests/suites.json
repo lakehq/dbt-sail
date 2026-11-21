@@ -1,0 +1,761 @@
+{
+  "schema_version": 1,
+  "inventory_scope": "Spark functional tests and their support files from the pinned upstream revision.",
+  "sources": {
+    "spark": {
+      "repo": "https://github.com/dbt-labs/dbt-adapters",
+      "sha": "f353ce0c30820b7aa363b6a7b39d5ef3b4e910d9",
+      "functional_root": "dbt-spark/tests/functional"
+    }
+  },
+  "entrypoints": {
+    "spark": {
+      "path": "tests/functional/spark",
+      "marker": "spark"
+    }
+  },
+  "runtime": {
+    "command": "python -m pytest",
+    "connection_option": "--sail-connection-mode=embedded|remote",
+    "format_option": "--file-format=delta|iceberg",
+    "defaults": {
+      "spark": "delta"
+    },
+    "existing_adapter_defaults": "unchanged",
+    "explicit_configs": "never overridden"
+  },
+  "files": [
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/__init__.py",
+      "is_test_file": false,
+      "status": "not_ported",
+      "coverage": "none",
+      "target_paths": [],
+      "reason": "Pending migration; no executable target. Requires fixture/provider adaptation and independent verification.",
+      "upstream_restrictions": []
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/dbt_clone/fixtures.py",
+      "is_test_file": false,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/dbt_clone/fixtures.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": []
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/dbt_clone/test_dbt_clone.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/dbt_clone/test_dbt_clone.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": [
+        {
+          "scope": "TestSparkClonePossible",
+          "line": 17,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/dbt_show/test_dbt_show.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/dbt_show/test_dbt_show.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": [
+        {
+          "scope": "TestSparkShowDoesNotHandleDoubleLimit",
+          "line": 18,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/empty/test_empty.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/empty/test_empty.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": []
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/incremental/test_incremental_merge_exclude_columns.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/incremental/test_incremental_merge_exclude_columns.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": [
+        {
+          "scope": "TestMergeExcludeColumns",
+          "line": 8,
+          "expression": "pytest.mark.skip_profile(\"spark_session\", \"apache_spark\")"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/incremental/test_incremental_on_schema_change.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/incremental/test_incremental_on_schema_change.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": [
+        {
+          "scope": "TestAppendOnSchemaChange",
+          "line": 24,
+          "expression": "pytest.mark.skip_profile(\"spark_http_odbc\")"
+        },
+        {
+          "scope": "TestInsertOverwriteOnSchemaChange",
+          "line": 35,
+          "expression": "pytest.mark.skip_profile(\"spark_session\", \"spark_http_odbc\")"
+        },
+        {
+          "scope": "TestDeltaOnSchemaChange",
+          "line": 48,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        },
+        {
+          "scope": "TestAppendOnSchemaChangeSpecialChars",
+          "line": 155,
+          "expression": "pytest.mark.skip_profile(\"spark_http_odbc\")"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/incremental/test_incremental_predicates.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/incremental/test_incremental_predicates.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": [
+        {
+          "scope": "TestIncrementalPredicatesMergeSpark",
+          "line": 30,
+          "expression": "pytest.mark.skip_profile(\"spark_session\", \"apache_spark\")"
+        },
+        {
+          "scope": "TestPredicatesMergeSpark",
+          "line": 49,
+          "expression": "pytest.mark.skip_profile(\"spark_session\", \"apache_spark\")"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/incremental/test_incremental_unique_id.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/incremental/test_incremental_unique_id.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": [
+        {
+          "scope": "TestUniqueKeySpark",
+          "line": 5,
+          "expression": "pytest.mark.skip_profile(\"spark_session\", \"apache_spark\")"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/incremental_strategies/fixtures.py",
+      "is_test_file": false,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/incremental_strategies/fixtures.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": []
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/incremental_strategies/seeds.py",
+      "is_test_file": false,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/incremental_strategies/seeds.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": []
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/incremental_strategies/test_incremental_strategies.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/incremental_strategies/test_incremental_strategies.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": [
+        {
+          "scope": "test_default_append",
+          "line": 57,
+          "expression": "pytest.mark.skip_profile(\n        \"spark_session\", \"spark_http_odbc\"\n    )"
+        },
+        {
+          "scope": "test_insert_overwrite",
+          "line": 79,
+          "expression": "pytest.mark.skip_profile(\n        \"spark_session\", \"spark_http_odbc\"\n    )"
+        },
+        {
+          "scope": "test_delta_strategies",
+          "line": 105,
+          "expression": "pytest.mark.skip_profile(\n        \"apache_spark\",\n\n\n        \"spark_session\",\n        \"spark_http_odbc\",\n    )"
+        },
+        {
+          "scope": "test_delta_strategies_overwrite",
+          "line": 115,
+          "expression": "pytest.mark.skip(\n        reason=\"The fixture does not build the partition overwrite model.\"\n    )"
+        },
+        {
+          "scope": "test_bad_strategies",
+          "line": 142,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/incremental_strategies/test_microbatch.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/incremental_strategies/test_microbatch.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": [
+        {
+          "scope": "TestMicrobatch",
+          "line": 15,
+          "expression": "pytest.mark.skip_profile(\n    \"spark_session\", \"spark_http_odbc\"\n)"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/persist_docs/fixtures.py",
+      "is_test_file": false,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/persist_docs/fixtures.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": []
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/persist_docs/test_persist_docs.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/persist_docs/test_persist_docs.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": [
+        {
+          "scope": "TestPersistDocsDeltaTable",
+          "line": 41,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        },
+        {
+          "scope": "TestPersistDocsDeltaView",
+          "line": 99,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        },
+        {
+          "scope": "TestPersistDocsMissingColumn",
+          "line": 136,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        },
+        {
+          "scope": "TestPersistDocsAllColumnsMissing",
+          "line": 178,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        },
+        {
+          "scope": "TestPersistDocsQuotedColumnCaseSensitive",
+          "line": 183,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        },
+        {
+          "scope": "TestPersistDocsQuotedDescriptionNotAppliedOnMismatch",
+          "line": 188,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        },
+        {
+          "scope": "test_quoted_description_not_applied_on_case_mismatch",
+          "line": 192,
+          "expression": "pytest.mark.skip(\n        reason=(\n            \"Spark SQL is case-insensitive by default (spark.sql.caseSensitive=false) \"\n            \"and the Hive metastore stores column names in lowercase, so a \"\n            \"case-mismatched physical column is physically unreachable. \"\n            \"Case-sensitivity logic is covered by TestPersistDocsQuotedColumnCaseSensitive. \"\n            \"Docs: https://spark.apache.org/docs/latest/sql-ref-identifier.html\"\n        )\n    )"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/seed_column_types/fixtures.py",
+      "is_test_file": false,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/seed_column_types/fixtures.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": []
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/seed_column_types/test_seed_column_types.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/seed_column_types/test_seed_column_types.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": [
+        {
+          "scope": "TestSeedColumnTypesCast",
+          "line": 10,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/test_basic.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/test_basic.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": [
+        {
+          "scope": "TestSimpleMaterializationsSpark",
+          "line": 17,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        },
+        {
+          "scope": "TestSingularTestsEphemeralSpark",
+          "line": 28,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\")"
+        },
+        {
+          "scope": "TestEphemeralSpark",
+          "line": 37,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        },
+        {
+          "scope": "TestIncrementalSpark",
+          "line": 42,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        },
+        {
+          "scope": "TestSnapshotCheckColsSpark",
+          "line": 53,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        },
+        {
+          "scope": "TestSnapshotTimestampSpark",
+          "line": 69,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        },
+        {
+          "scope": "TestBaseAdapterMethod",
+          "line": 83,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/test_constraints.py",
+      "is_test_file": true,
+      "status": "semantic_port",
+      "coverage": "partial",
+      "target_paths": [
+        "tests/functional/spark/test_constraints.py"
+      ],
+      "reason": "Omitted vendor-specific HTTP and job-cluster cases.",
+      "upstream_restrictions": [
+        {
+          "scope": "TestSparkTableConstraintsColumnsEqualPyodbc",
+          "line": 150,
+          "expression": "pytest.mark.skip_profile(\"spark_session\", \"apache_spark\")"
+        },
+        {
+          "scope": "TestSparkViewConstraintsColumnsEqualPyodbc",
+          "line": 161,
+          "expression": "pytest.mark.skip_profile(\"spark_session\", \"apache_spark\")"
+        },
+        {
+          "scope": "TestSparkIncrementalConstraintsColumnsEqualPyodbc",
+          "line": 172,
+          "expression": "pytest.mark.skip_profile(\"spark_session\", \"apache_spark\")"
+        },
+        {
+          "scope": "TestSparkTableConstraintsDdlEnforcement",
+          "line": 256,
+          "expression": "pytest.mark.skip_profile(\"spark_session\", \"apache_spark\")"
+        },
+        {
+          "scope": "TestSparkIncrementalConstraintsDdlEnforcement",
+          "line": 269,
+          "expression": "pytest.mark.skip_profile(\"spark_session\", \"apache_spark\")"
+        },
+        {
+          "scope": "TestSparkConstraintQuotedColumn",
+          "line": 282,
+          "expression": "pytest.mark.skip_profile(\"spark_session\", \"apache_spark\")"
+        },
+        {
+          "scope": "TestSparkTableConstraintsRollback",
+          "line": 341,
+          "expression": "pytest.mark.skip_profile(\"spark_session\", \"apache_spark\")"
+        },
+        {
+          "scope": "TestSparkIncrementalConstraintsRollback",
+          "line": 360,
+          "expression": "pytest.mark.skip_profile(\"spark_session\", \"apache_spark\")"
+        },
+        {
+          "scope": "TestSparkModelConstraintsRuntimeEnforcement",
+          "line": 377,
+          "expression": "pytest.mark.skip_profile(\"spark_session\", \"apache_spark\")"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/test_get_columns_in_relation.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/test_get_columns_in_relation.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": [
+        {
+          "scope": "test_get_columns_in_relation",
+          "line": 28,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/test_grants.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/test_grants.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": [
+        {
+          "scope": "TestModelGrantsSpark",
+          "line": 9,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        },
+        {
+          "scope": "TestIncrementalGrantsSpark",
+          "line": 21,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        },
+        {
+          "scope": "TestSeedGrantsSpark",
+          "line": 33,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        },
+        {
+          "scope": "TestSnapshotGrantsSpark",
+          "line": 42,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        },
+        {
+          "scope": "TestInvalidGrantsSpark",
+          "line": 54,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/test_python_model.py",
+      "is_test_file": true,
+      "status": "semantic_port",
+      "coverage": "partial",
+      "target_paths": [
+        "tests/functional/spark/test_python_model.py"
+      ],
+      "reason": "Omitted vendor-specific HTTP and job-cluster cases.",
+      "upstream_restrictions": [
+        {
+          "scope": "TestPythonModelSpark",
+          "line": 11,
+          "expression": "pytest.mark.skip_profile(\n    \"apache_spark\", \"spark_session\", \"spark_http_odbc\"\n)"
+        },
+        {
+          "scope": "TestPySpark",
+          "line": 18,
+          "expression": "pytest.mark.skip_profile(\n    \"apache_spark\", \"spark_session\", \"spark_http_odbc\"\n)"
+        },
+        {
+          "scope": "TestPythonIncrementalModelSpark",
+          "line": 40,
+          "expression": "pytest.mark.skip_profile(\n    \"apache_spark\", \"spark_session\", \"spark_http_odbc\"\n)"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/test_query_timeout.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/test_query_timeout.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": [
+        {
+          "scope": "TestQueryTimeout",
+          "line": 37,
+          "expression": "pytest.mark.skip_profile(\n    \"spark_http_odbc\",\n\n\n\n    \"spark_session\",\n)"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/test_simple_seed.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/test_simple_seed.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": []
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/test_store_test_failures.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/test_store_test_failures.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": [
+        {
+          "scope": "TestSparkStoreTestFailures",
+          "line": 10,
+          "expression": "pytest.mark.skip_profile(\n    \"spark_session\", \"spark_http_odbc\"\n)"
+        },
+        {
+          "scope": "TestSparkStoreTestFailuresWithDelta",
+          "line": 39,
+          "expression": "pytest.mark.skip_profile(\n    \"apache_spark\", \"spark_session\", \"spark_http_odbc\"\n)"
+        },
+        {
+          "scope": "TestStoreTestFailuresAsInteractions",
+          "line": 74,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        },
+        {
+          "scope": "TestStoreTestFailuresAsProjectLevelOff",
+          "line": 79,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        },
+        {
+          "scope": "TestStoreTestFailuresAsProjectLevelView",
+          "line": 84,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        },
+        {
+          "scope": "TestStoreTestFailuresAsGeneric",
+          "line": 89,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        },
+        {
+          "scope": "TestStoreTestFailuresAsProjectLevelEphemeral",
+          "line": 94,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        },
+        {
+          "scope": "TestStoreTestFailuresAsExceptions",
+          "line": 99,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/unit_testing/test_unit_testing.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/unit_testing/test_unit_testing.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": []
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/utils/fixture_listagg.py",
+      "is_test_file": false,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/utils/fixture_listagg.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": []
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/utils/test_data_types.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/utils/test_data_types.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": []
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/utils/test_timestamps.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/utils/test_timestamps.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": []
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/adapter/utils/test_utils.py",
+      "is_test_file": true,
+      "status": "direct_import",
+      "coverage": "full_file",
+      "target_paths": [
+        "tests/functional/spark/utils/test_utils.py"
+      ],
+      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "upstream_restrictions": [
+        {
+          "scope": "TestConcat",
+          "line": 80,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        },
+        {
+          "scope": "TestDateDiff",
+          "line": 99,
+          "expression": "pytest.mark.skip_profile(\"apache_spark\", \"spark_session\")"
+        },
+        {
+          "scope": "TestHash",
+          "line": 120,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        },
+        {
+          "scope": "TestLastDay",
+          "line": 129,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        },
+        {
+          "scope": "TestReplace",
+          "line": 157,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        },
+        {
+          "scope": "TestRight",
+          "line": 162,
+          "expression": "pytest.mark.skip_profile(\"spark_session\")"
+        }
+      ]
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/conftest.py",
+      "is_test_file": false,
+      "status": "not_ported",
+      "coverage": "none",
+      "target_paths": [],
+      "reason": "Pending migration; no executable target. Requires fixture/provider adaptation and independent verification.",
+      "upstream_restrictions": []
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/fixtures/__init__.py",
+      "is_test_file": false,
+      "status": "not_ported",
+      "coverage": "none",
+      "target_paths": [],
+      "reason": "Pending migration; no executable target. Requires fixture/provider adaptation and independent verification.",
+      "upstream_restrictions": []
+    },
+    {
+      "source": "spark",
+      "upstream_path": "dbt-spark/tests/functional/fixtures/profiles.py",
+      "is_test_file": false,
+      "status": "not_ported",
+      "coverage": "none",
+      "target_paths": [],
+      "reason": "Pending migration; no executable target. Requires fixture/provider adaptation and independent verification.",
+      "upstream_restrictions": [
+        {
+          "scope": "skip_by_profile_type",
+          "line": 32,
+          "expression": "pytest.skip(f\"skipped on '{profile_type}' profile\")"
+        }
+      ]
+    }
+  ]
+}
