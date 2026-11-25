@@ -1,3 +1,5 @@
+from datetime import timezone
+
 import pytest
 
 from dbt.tests.adapter.utils.test_array_append import BaseArrayAppend
@@ -67,7 +69,9 @@ class TestCastBoolToText(BaseCastBoolToText):
 
 # Use either BaseCurrentTimestampAware or BaseCurrentTimestampNaive but not both
 class TestCurrentTimestamp(BaseCurrentTimestampNaive):
-    pass
+    def test_current_timestamp_matches_utc(self, current_timestamp):
+        # Spark Connect collects TIMESTAMP_LTZ as a naive datetime in the client timezone.
+        super().test_current_timestamp_matches_utc(current_timestamp.astimezone(timezone.utc))
 
 
 class TestDate(BaseDate):

@@ -106,10 +106,8 @@ class SailConnectionManager(SparkConnectionManager):
     def _open_embedded(cls, creds: SailCredentials) -> Any:
         """Start a SparkConnectServer in-process via pysail, then connect PySpark to it."""
         from pysail.spark import SparkConnectServer
-        from dbt.adapters.spark.session import (
-            SessionConnectionWrapper,
-            Connection as SessionConnection,
-        )
+        from dbt.adapters.spark.session import Connection as SessionConnection
+        from dbt.adapters.sail.session import SailSessionConnectionWrapper
 
         if cls._server is None or not cls._server.running:  # type: ignore
             port = creds.port if creds.port != 443 else 0
@@ -122,19 +120,17 @@ class SailConnectionManager(SparkConnectionManager):
 
         params = dict(creds.server_side_parameters)
         params["spark.remote"] = remote_url
-        return SessionConnectionWrapper(SessionConnection(server_side_parameters=params))
+        return SailSessionConnectionWrapper(SessionConnection(server_side_parameters=params))
 
     @classmethod
     def _open_remote(cls, creds: SailCredentials) -> Any:
         """Connect PySpark to an already-running Sail server via Spark Connect."""
-        from dbt.adapters.spark.session import (
-            SessionConnectionWrapper,
-            Connection as SessionConnection,
-        )
+        from dbt.adapters.spark.session import Connection as SessionConnection
+        from dbt.adapters.sail.session import SailSessionConnectionWrapper
 
         params = dict(creds.server_side_parameters)
         params["spark.remote"] = cls._remote_url(creds)
-        return SessionConnectionWrapper(SessionConnection(server_side_parameters=params))
+        return SailSessionConnectionWrapper(SessionConnection(server_side_parameters=params))
 
     @staticmethod
     def _remote_url(creds: SailCredentials) -> str:

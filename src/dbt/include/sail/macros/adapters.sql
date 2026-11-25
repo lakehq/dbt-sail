@@ -7,5 +7,5 @@
 {% endmacro %}
 
 {% macro sail__get_columns_in_relation(relation) -%}
-  {{ return(spark__get_columns_in_relation(relation)) }}
+  {{ return(adapter.get_columns_in_relation(relation)) }}
 {% endmacro %}
