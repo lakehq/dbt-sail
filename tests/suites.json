@@ -196,7 +196,7 @@
       "target_paths": [
         "tests/functional/spark/incremental_strategies/fixtures.py"
       ],
-      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "reason": "The invalid merge model explicitly selects Parquet so it remains invalid under both suite defaults.",
       "upstream_restrictions": []
     },
     {
@@ -551,18 +551,21 @@
       "source": "spark",
       "upstream_path": "dbt-spark/tests/functional/adapter/test_query_timeout.py",
       "is_test_file": true,
-      "status": "direct_import",
-      "coverage": "full_file",
+      "status": "not_applicable",
+      "coverage": "none",
       "target_paths": [
         "tests/functional/spark/test_query_timeout.py"
       ],
-      "reason": "Namespace/package import adaptation and shared Sail fixtures; SQL/assertions and upstream skips retained.",
+      "reason": "The upstream timeout test requires PyHive polling. Both Sail connection modes use Spark Connect.",
       "upstream_restrictions": [
         {
           "scope": "TestQueryTimeout",
           "line": 37,
           "expression": "pytest.mark.skip_profile(\n    \"spark_http_odbc\",\n\n\n\n    \"spark_session\",\n)"
         }
+      ],
+      "case_statuses": [
+        "not_applicable"
       ]
     },
     {

@@ -74,7 +74,7 @@ def test_manifest_targets_and_inventory():
             e["source"] == "spark" and e["is_test_file"] and e["status"] == "direct_import"
             for e in manifest["files"]
         )
-        == 21
+        == 20
     )
     for source in manifest["sources"].values():
         assert len(source["sha"]) == 40

@@ -34,10 +34,7 @@ select 1 as id
 """
 
 
-@pytest.mark.skip_profile(
-    "spark_http_odbc",
-    "spark_session",
-)
+@pytest.mark.skip(reason="Query timeout requires PyHive polling. Sail uses Spark Connect.")
 class TestQueryTimeout:
     """Test query timeout functionality.
 

@@ -50,6 +50,7 @@ select cast(3 as bigint) as id, 'anyway' as msg
 bad_merge_not_delta_sql = """
 {{ config(
     materialized = 'incremental',
+    file_format = 'parquet',
     incremental_strategy = 'merge',
 ) }}
 
